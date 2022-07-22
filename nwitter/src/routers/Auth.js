@@ -1,35 +1,36 @@
 import React, { useState } from "react";
-
+import { authService } from "../firebase";
 const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  //   const loginEmail = (e) => {
-  //     setEmail(e.target.value);
-  //     if (e.target.value === "") {
-  //       alert("이메일을입력");
-  //     }
-  //     console.log(e.target.name);
-  //   };
-
-  //   const loginPassword = (e) => {
-  //     setPassword(e.target.value);
-  //     if (e.target.value === "") {
-  //       alert("비밀번호입력");
-  //     }
-  //     console.log(e.target.name);
-  //   };
+  const [newAccount, setNewAccount] = useState(true);
 
   const LoginOnChange = (e) => {
     const {
       target: { name, value },
     } = e;
-    const login = name === "email" ? setEmail(value) : setPassword(value);
+    name === "email" ? setEmail(value) : setPassword(value);
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
+    console.log(newAccount);
+    try {
+      let data;
+      if (newAccount) {
+        data = await authService.createUserWithEmailAndPassword(
+          email,
+          password
+        );
+      } else {
+        data = await authService.signInWithEmailAndPassword(email, password);
+      }
+      console.log(data);
+    } catch (error) {
+      alert(error);
+    }
   };
+
   return (
     <div>
       <form onSubmit={onSubmit}>
@@ -49,7 +50,7 @@ const Auth = () => {
           value={password}
           onChange={LoginOnChange}
         />
-        <input type="submit" value="log in" />
+        <input type="submit" value={newAccount ? "CreateAccount" : "Log in"} />
       </form>
       <div>
         <button>Continue with Google</button>
@@ -59,3 +60,19 @@ const Auth = () => {
   );
 };
 export default Auth;
+
+//   const loginEmail = (e) => {
+//     setEmail(e.target.value);
+//     if (e.target.value === "") {
+//       alert("이메일을입력");
+//     }
+//     console.log(e.target.name);
+//   };
+
+//   const loginPassword = (e) => {
+//     setPassword(e.target.value);
+//     if (e.target.value === "") {
+//       alert("비밀번호입력");
+//     }
+//     console.log(e.target.name);
+//   };
