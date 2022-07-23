@@ -11,6 +11,7 @@ const AppRouter = ({ isLoggedIn }) => {
           <>
             <Router exact path="/">
               <Home />
+              <button>logout</button>
             </Router>
           </>
         ) : (
