@@ -1,8 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { dbService } from "../firebase";
 
 const Home = () => {
   const [nweet, setNweet] = useState("");
+  const [nweets, setNweets] = useState([]);
+
+  const getNweets = async () => {
+    const dbNweets = await dbService.collection("nweets").get();
+    dbNweets.forEach((document) => {
+      const nweetObject = {
+        ...document.data(), //데이터 내용물
+        id: document.id,
+      };
+      setNweets((prev) => [nweetObject, ...prev]); // 이배열에서 첫번째 요소는 최근 document , 그뒤로는 이전 document
+    });
+  };
+
+  useEffect(() => {
+    getNweets();
+  }, []);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -33,6 +49,13 @@ const Home = () => {
         />
         <input type="submit" value="Nweet" />
       </form>
+      <div>
+        {nweets.map((el, index) => (
+          <div key={el.id}>
+            <h4>{el.nweet}</h4>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
