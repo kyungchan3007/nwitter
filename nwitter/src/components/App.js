@@ -4,17 +4,34 @@ import { authService } from "../firebase";
 function App() {
   const [init, setInit] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userObject, setUserObject] = useState(null);
+
+  // useEffect(() => {
+  //   authService.onAuthStateChanged((user) => {
+  //     user ? setIsLoggedIn(true) : setIsLoggedIn(false);
+  //     setInit(false);
+  //   });
+  // }, []);
 
   useEffect(() => {
     authService.onAuthStateChanged((user) => {
-      user ? setIsLoggedIn(true) : setIsLoggedIn(false);
-      setInit(false);
+      if (user) {
+        setIsLoggedIn(true);
+        setUserObject(user);
+      } else {
+        setIsLoggedIn(false);
+      }
     });
   }, []);
 
   return (
     <>
-      <AppRouter isLoggedIn={isLoggedIn} />
+      {init ? (
+        <AppRouter isLoggedIn={isLoggedIn} userObject={userObject} />
+      ) : (
+        "Initializing..."
+      )}
+
       <footer>&copy; Nwitter {new Date().getUTCFullYear()}</footer>
     </>
   );

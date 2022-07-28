@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { dbService } from "../firebase";
 
-const Home = () => {
+const Home = ({ userObject }) => {
   const [nweet, setNweet] = useState("");
   const [nweets, setNweets] = useState([]);
 
@@ -18,14 +18,22 @@ const Home = () => {
 
   useEffect(() => {
     getNweets();
+    dbService.collection("nwwets").onSnapshot((snapshot) => {
+      const nweetArray = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })); // reRander 안됨 , forEach 사용시 리렌더 됨
+      setNweets(nweetArray);
+    });
   }, []);
 
   const onSubmit = async (e) => {
     e.preventDefault();
     await dbService.collection("nweets").add({
       // 프로미스 반환
-      nweet, // 필드
-      createdAt: Date.now(), // 필드
+      text: nweet,
+      createdAt: Date.now(),
+      creatorId: userObject.uid,
     });
     setNweet("");
   };
@@ -52,7 +60,7 @@ const Home = () => {
       <div>
         {nweets.map((el, index) => (
           <div key={el.id}>
-            <h4>{el.nweet}</h4>
+            <h4>{el.text}</h4>
           </div>
         ))}
       </div>
