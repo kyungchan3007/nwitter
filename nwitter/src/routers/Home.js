@@ -5,20 +5,20 @@ const Home = ({ userObject }) => {
   const [nweet, setNweet] = useState("");
   const [nweets, setNweets] = useState([]);
 
-  const getNweets = async () => {
-    const dbNweets = await dbService.collection("nweets").get();
-    dbNweets.forEach((document) => {
-      const nweetObject = {
-        ...document.data(), //데이터 내용물
-        id: document.id,
-      };
-      setNweets((prev) => [nweetObject, ...prev]); // 이배열에서 첫번째 요소는 최근 document , 그뒤로는 이전 document
-    });
-  };
+  // const getNweets = async () => {
+  //   const dbNweets = await dbService.collection("nweets").get();
+  //   dbNweets.forEach((document) => {
+  //     const nweetObject = {
+  //       ...document.data(), //데이터 내용물
+  //       id: document.id,
+  //     };
+  //     setNweets((prev) => [nweetObject, ...prev]); // 이배열에서 첫번째 요소는 최근 document , 그뒤로는 이전 document
+  //   });
+  // };
 
   useEffect(() => {
-    getNweets();
-    dbService.collection("nwwets").onSnapshot((snapshot) => {
+    // getNweets();
+    dbService.collection("nweets").onSnapshot((snapshot) => {
       const nweetArray = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
@@ -49,18 +49,18 @@ const Home = ({ userObject }) => {
     <div>
       <form onSubmit={onSubmit}>
         <input
+          value={nweet}
+          onChange={onChange}
           type="text"
           placeholder="what's on your mind"
           maxLength={120}
-          value={nweet}
-          onChange={onChange}
         />
         <input type="submit" value="Nweet" />
       </form>
       <div>
-        {nweets.map((el, index) => (
-          <div key={el.id}>
-            <h4>{el.text}</h4>
+        {nweets.map((nweet, index) => (
+          <div key={nweet.id}>
+            <h4>{nweet.text}</h4>
           </div>
         ))}
       </div>

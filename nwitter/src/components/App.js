@@ -21,6 +21,7 @@ function App() {
       } else {
         setIsLoggedIn(false);
       }
+      setInit(true);
     });
   }, []);
 
@@ -31,6 +32,7 @@ function App() {
       ) : (
         "Initializing..."
       )}
+      {/* <AppRouter isLoggedIn={isLoggedIn} userObject={userObject} /> */}
 
       <footer>&copy; Nwitter {new Date().getUTCFullYear()}</footer>
     </>
