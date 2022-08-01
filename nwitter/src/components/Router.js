@@ -10,6 +10,7 @@ import Home from "../routers/Home";
 import Profile from "../routers/Profile";
 import Navigation from "./navigation";
 
+//userObject (props App.js) , isLoggedIn( props App.js )
 const AppRouter = ({ isLoggedIn, userObject }) => {
   return (
     <Router>

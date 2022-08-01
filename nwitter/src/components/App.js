@@ -15,12 +15,8 @@ function App() {
 
   useEffect(() => {
     authService.onAuthStateChanged((user) => {
-      if (user) {
-        setIsLoggedIn(true);
-        setUserObject(user);
-      } else {
-        setIsLoggedIn(false);
-      }
+      // 어플리케이션 초기화 될때 발생 , 로그인 로그아웃 시 실행
+      if (user) setUserObject(user);
       setInit(true);
     });
   }, []);
@@ -28,7 +24,7 @@ function App() {
   return (
     <>
       {init ? (
-        <AppRouter isLoggedIn={isLoggedIn} userObject={userObject} />
+        <AppRouter isLoggedIn={Boolean(userObject)} userObject={userObject} />
       ) : (
         "Initializing..."
       )}
