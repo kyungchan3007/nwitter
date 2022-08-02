@@ -30,15 +30,24 @@ const Home = ({ userObject }) => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    const fileRef = storageService.ref().child(`${userObject.uid}/${uuidv4()}`);
-    const response = await fileRef.putString(isfile, "data_url");
-    console.log(response);
-    // await dbService.collection("nweeㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴ
-    //   text: nweet,
-    //   createdAt: Date.now(),
-    //   creatorId: userObject.uid,
-    // });
+    let imageUrl = "";
+    if (imageUrl != "") {
+      const fileRef = storageService
+        .ref()
+        .child(`${userObject.uid}/${uuidv4()}`);
+      const response = await fileRef.putString(isfile, "data_url");
+      imageUrl = await response.ref.getDownloadURL();
+    }
+
+    const nweetObj = {
+      text: nweet,
+      createdAt: Date.now(),
+      creatorId: userObject.uid,
+      imageUrl,
+    };
+    await dbService.collection("nweets").add(nweetObj);
     setNweet("");
+    setIsFile("");
   };
 
   const onChange = (e) => {
@@ -55,7 +64,6 @@ const Home = ({ userObject }) => {
     const theFile = files[0];
     const reader = new FileReader();
     reader.onloadend = (finishedEvent) => {
-      console.log(finishedEvent);
       const {
         currentTarget: { result },
       } = finishedEvent;
