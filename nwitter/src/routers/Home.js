@@ -5,7 +5,7 @@ import { dbService } from "../firebase";
 const Home = ({ userObject }) => {
   const [nweet, setNweet] = useState("");
   const [nweets, setNweets] = useState([]);
-
+  const [isfile, setIsFile] = useState();
   // const getNweets = async () => {
   //   const dbNweets = await dbService.collection("nweets").get();
   //   dbNweets.forEach((document) => {
@@ -54,8 +54,16 @@ const Home = ({ userObject }) => {
     const reader = new FileReader();
     reader.onloadend = (finishedEvent) => {
       console.log(finishedEvent);
+      const {
+        currentTarget: { result },
+      } = finishedEvent;
+      setIsFile(result);
     };
     reader.readAsDataURL(theFile);
+  };
+
+  const onClearPhotClick = () => {
+    setIsFile(null);
   };
   return (
     <div>
@@ -69,6 +77,12 @@ const Home = ({ userObject }) => {
         />
         <input type="file" accept="image/*" onChange={onFileChange} />
         <input type="submit" value="Nweet" />
+        {isfile && (
+          <div>
+            <img src={isfile} width="50px" height={"50px"} />
+            <button onClick={onClearPhotClick}>Clean image</button>
+          </div>
+        )}
       </form>
       <div>
         {nweets.map((nweet, index) => (
