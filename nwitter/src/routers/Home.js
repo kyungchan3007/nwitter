@@ -31,7 +31,7 @@ const Home = ({ userObject }) => {
   const onSubmit = async (e) => {
     e.preventDefault();
     let imageUrl = "";
-    if (imageUrl != "") {
+    if (imageUrl !== "") {
       const fileRef = storageService
         .ref()
         .child(`${userObject.uid}/${uuidv4()}`);
@@ -64,6 +64,7 @@ const Home = ({ userObject }) => {
     const theFile = files[0];
     const reader = new FileReader();
     reader.onloadend = (finishedEvent) => {
+      console.log(finishedEvent);
       const {
         currentTarget: { result },
       } = finishedEvent;

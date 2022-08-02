@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { dbService } from "../firebase";
+import { dbService, storageService } from "../firebase";
 
 const Nweet = ({ nweetObj, isOwner }) => {
   const [edit, setEdit] = useState(false);
@@ -9,6 +9,7 @@ const Nweet = ({ nweetObj, isOwner }) => {
     const ok = window.confirm("Are you sure you want to delete this nweet?");
     if (ok) {
       await dbService.doc(`nweets/${nweetObj.id}`).delete();
+      await storageService.refFromURL(nweetObj.imageUrl).delete();
     }
   };
 
@@ -48,8 +49,8 @@ const Nweet = ({ nweetObj, isOwner }) => {
       ) : (
         <>
           <h4>{nweetObj.text}</h4>
-          {nweetObj.attachmentUrl && (
-            <img src={nweetObj.attachmentUrl} width="50px" height="50px" />
+          {nweetObj.imageUrl && (
+            <img src={nweetObj.imageUrl} width="50px" height="50px" />
           )}
           {isOwner && (
             <>
