@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Nweet from "../components/Nweet";
-import { dbService } from "../firebase";
-
+import { dbService, storageService } from "../firebase";
+import { v4 as uuidv4 } from "uuid";
 const Home = ({ userObject }) => {
   const [nweet, setNweet] = useState("");
   const [nweets, setNweets] = useState([]);
@@ -30,12 +30,14 @@ const Home = ({ userObject }) => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    await dbService.collection("nweets").add({
-      // 프로미스 반환
-      text: nweet,
-      createdAt: Date.now(),
-      creatorId: userObject.uid,
-    });
+    const fileRef = storageService.ref().child(`${userObject.uid}/${uuidv4()}`);
+    const response = await fileRef.putString(isfile, "data_url");
+    console.log(response);
+    // await dbService.collection("nweeㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴ
+    //   text: nweet,
+    //   createdAt: Date.now(),
+    //   creatorId: userObject.uid,
+    // });
     setNweet("");
   };
 
