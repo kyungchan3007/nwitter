@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AppRouter from "./Router";
 import { authService } from "../firebase";
+import { updateCurrentUser } from "firebase/auth";
 function App() {
   const [init, setInit] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -21,10 +22,24 @@ function App() {
     });
   }, []);
 
+  //
+  const refreshUser = async () => {
+    await updateCurrentUser(authService, authService.currentUser);
+    setUserObject(authService.currentUser);
+
+    //State가 유의미하게 변경되면 리렌더 된기 때문에 이방법으로도 사용가능하다
+    // setInit(false);
+    // setInit(true);
+  };
+
   return (
     <>
       {init ? (
-        <AppRouter isLoggedIn={Boolean(userObject)} userObject={userObject} />
+        <AppRouter
+          refreshUser={refreshUser}
+          isLoggedIn={Boolean(userObject)}
+          userObject={userObject}
+        />
       ) : (
         "Initializing..."
       )}

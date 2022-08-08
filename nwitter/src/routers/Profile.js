@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { authService, dbService } from "../firebase";
 
-export default ({ userObject }) => {
+export default ({ refreshUser, userObject }) => {
   const [newDisplayName, setDisplayName] = useState(userObject.displayName);
   const [newPhotoUrl, setPhotoUrl] = useState(userObject.photoURL);
   const history = useHistory();
@@ -18,8 +18,8 @@ export default ({ userObject }) => {
       .where("creatorId", "==", userObject.uid)
       .orderBy("createdAt")
       .get();
-    console.log(nweets.docs.map((doc) => doc.data()));
   };
+
   const onChangeDisplay = (e) => {
     const {
       target: { value },
@@ -27,25 +27,20 @@ export default ({ userObject }) => {
     setDisplayName(value);
   };
 
-  // const onChangeTest = (e) => {
-  //   const {
-  //     target: { value },
-  //   } = e;
-  //   console.log(e.target.value);
-  // };
-
   const onSubmit = async (e) => {
     e.preventDefault();
     if (userObject.displayName !== newDisplayName) {
       await userObject.updateProfile({
         displayName: newDisplayName,
       });
+      refreshUser();
     }
+    setDisplayName("");
   };
 
   useEffect(() => {
     getMyNweets();
-  });
+  }, []);
 
   return (
     <>
