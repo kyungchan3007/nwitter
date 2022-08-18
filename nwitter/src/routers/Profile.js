@@ -10,6 +10,7 @@ export default ({ refreshUser, userObject }) => {
   const onLogOutClick = () => {
     authService.signOut();
     history.push("/");
+    refreshUser()
   };
 
   const getMyNweets = async () => {
