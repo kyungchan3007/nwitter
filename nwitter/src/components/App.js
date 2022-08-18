@@ -15,11 +15,15 @@ function App() {
   // }, []);
 
   useEffect(() => {
-    authService.onAuthStateChanged((user) => {
-      // 어플리케이션 초기화 될때 발생 , 로그인 로그아웃 시 실행
-      if (user) setUserObject(user);
-      setInit(true);
-    });
+    console.log("컴포넌트생김");
+    return () => {
+      authService.onAuthStateChanged((user) => {
+        // 어플리케이션 초기화 될때 발생 , 로그인 로그아웃 시 실행
+        if (user) setUserObject(user);
+        setInit(true);
+      });
+      console.log("컴포넌트사라짐");
+    };
   }, []);
 
   //

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { authService } from "../firebase";
 import { firebaseInstance } from "../firebase";
+import AuthForm from "../components/AuthForm";
 const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -41,34 +42,19 @@ const Auth = () => {
       ? (provider = new firebaseInstance.auth.GoogleAuthProvider())
       : (provider = new firebaseInstance.auth.GithubAuthProvider());
 
-    const data = await authService.signInWithPopup(provider);
-    console.log(data);
+    await authService.signInWithPopup(provider);
   };
   return (
     <div>
-      <form onSubmit={onSubmit}>
-        <input
-          type="text"
-          placeholder="Email"
-          name="email"
-          value={email}
-          required
-          onChange={LoginOnChange}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          required
-          name="password"
-          value={password}
-          onChange={LoginOnChange}
-        />
-        {error}
-        <span onClick={toggleAccount}>
-          {newAccount ? "login" : "CreateAccount"}
-        </span>
-        <input type="submit" value={newAccount ? "CreateAccount" : "Log in"} />
-      </form>
+      <AuthForm
+        toggleAccount={toggleAccount}
+        onSubmit={onSubmit}
+        LoginOnChange={LoginOnChange}
+        email={email}
+        error={error}
+        password={password}
+        newAccount={newAccount}
+      />
       <div>
         <button onClick={onSocialClick} name="google">
           Continue with Google

@@ -10,7 +10,7 @@ export default ({ refreshUser, userObject }) => {
   const onLogOutClick = () => {
     authService.signOut();
     history.push("/");
-    refreshUser()
+    refreshUser();
   };
 
   const getMyNweets = async () => {
@@ -41,6 +41,7 @@ export default ({ refreshUser, userObject }) => {
 
   useEffect(() => {
     getMyNweets();
+    console.log(userObject);
   }, []);
 
   return (
